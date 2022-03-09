@@ -12,7 +12,7 @@ from make_connection import make_connection_to_postgresql
 class Task3:
     def task3(self,cursor):
         try:
-            engine = create_engine("postgresql+psycopg2://postgres:root@localhost:5432/Employee")
+            engine = create_engine("postgresql://postgres:root@localhost:5432/Employee")
             print(engine)
             logging.debug(f"Successfully create engine  - {engine}")
         except:
