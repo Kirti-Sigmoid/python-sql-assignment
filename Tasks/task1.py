@@ -21,7 +21,7 @@ class Task1:
             cursor.execute(query)  # this will execute the query
             logging.debug(f" query executed on cursor - {cursor}")
         except:
-            logging.error("failed to fetch ci=ursor from database")
+            logging.error("failed to fetch cursor from database")
 
         # extracting all data from cursor
         query_result = cursor.fetchall()
