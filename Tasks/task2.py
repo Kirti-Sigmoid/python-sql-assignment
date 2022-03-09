@@ -15,21 +15,23 @@ from make_connection import make_connection_to_postgresql
 class Task2:
     def task2(self,cursor):
         # update the end date to current date to find the month spent of each employee who are in the orgenisation
-        update_end_date = "update jobhist set enddate=current_date where enddate=null"
+        update_end_date = "update jobhist set enddate=current_date where enddate is null"
         try:
             cursor.execute(update_end_date)  # this will execute the query
             logging.debug(f" updation executed on cursor - {cursor}")
         except:
-            logging.error("failed to fetch ci=ursor from database")
+            logging.error("failed to fetch cursor from database")
 
-        query = "select emp.ename,emp.empno,dept.deptno, dept.dname,round((jh.enddate - jh.startdate)/30)*jh.sal as total_compensation," \
-                "date_part('month',age(jh.enddate, jh.startdate)) as " \
-                "emp_month_spent from emp join dept on emp.deptno = dept.deptno join jobhist as jh on emp.empno = jh.empno"
+        query = "select emp.ename,emp.empno,dept.dname, " \
+                "sum(round((jh.enddate - jh.startdate)/30) * jh.sal) " \
+                "as total_compensation,sum(round((jh.enddate - jh.startdate)/30)) " \
+                "as emp_month_spent from emp join dept on emp.deptno = dept.deptno join jobhist as jh on " \
+                "emp.empno = jh.empno GROUP BY  emp.empno, dept.dname;"
         try:
             cursor.execute(query)  # this will execute the query
             logging.debug(f" query executed on cursor - {cursor}")
         except:
-            logging.error("failed to fetch ci=ursor from database")
+            logging.error("failed to fetch cursor from database")
             # extracting all data from cursor
         query_result = cursor.fetchall()
 
@@ -41,7 +43,7 @@ class Task2:
         # creating dataframe from data (list_type)
         df = pd.DataFrame(query_result)
         try:
-            path = "/task2.xlsx"
+            path = "/Users/kirti_sigmoid/PycharmProjects/python-sql-assignment/task2.xlsx"
             # adding data to excel file
             df.to_excel(path, header=False, index=False)
             logging.info(f"Dataframe converted to excel stored in location -{path}")
